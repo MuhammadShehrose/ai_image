@@ -105,6 +105,7 @@ import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
 
 import PrivateRoute from "@/components/PrivateRoute"; // 👈 Make sure this file exists
+import PublicRoute from "@/components/PublicRoute"; // 👈 Make sure this file exist s
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -161,11 +162,19 @@ export const routes = [
     pages: [
       {
         path: "/sign-in",
-        element: <SignIn />,
+        element: (
+          <PublicRoute>
+            <SignIn />
+          </PublicRoute>
+        ),
       },
       {
         path: "/sign-up",
-        element: <SignUp />,
+        element: (
+          <PublicRoute>
+            <SignUp />
+          </PublicRoute>
+        ),
       },
     ],
   },

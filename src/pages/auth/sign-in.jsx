@@ -21,7 +21,7 @@ export function SignIn() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +36,7 @@ export function SignIn() {
       setError("Invalid email or password. Please try again.");
     }
   };
+
 
   return (
     <section className="m-8 flex gap-4">
@@ -87,7 +88,10 @@ export function SignIn() {
           <Button type="submit" className="mt-6" fullWidth>
             Sign In
           </Button>
-
+          <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
+            You have Not account?
+            <Link to="/auth/sign-up" className="text-gray-900 ml-1">Sign up</Link>
+          </Typography>
           {/* rest of your existing buttons and links remain unchanged */}
 
         </form>
@@ -98,7 +102,7 @@ export function SignIn() {
           className="h-full w-full object-cover rounded-3xl"
         />
       </div>
-    </section>
+    </section >
   );
 }
 

@@ -5,28 +5,14 @@ import {
   Button,
   IconButton,
   Breadcrumbs,
-  Input,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Avatar,
 } from "@material-tailwind/react";
-import {
-  UserCircleIcon,
-  Cog6ToothIcon,
-  BellIcon,
-  ClockIcon,
-  CreditCardIcon,
-  Bars3Icon,
-} from "@heroicons/react/24/solid";
+import { UserCircleIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import {
   useMaterialTailwindController,
-  setOpenConfigurator,
   setOpenSidenav,
 } from "@/context";
 import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext"; // Adjust the import path as necessary
+import { AuthContext } from "../../context/AuthContext"; // Adjust as needed
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -35,57 +21,40 @@ export function DashboardNavbar() {
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
   const navigate = useNavigate();
 
-  // Check user login status (change this according to your auth logic)
-  const isLoggedIn = Boolean(localStorage.getItem("userToken")); // example token
+  const { currentUser, logout } = useContext(AuthContext); // ✅ unified auth source
 
-  // Logout handler
-  const handleLogout = () => {
-    localStorage.removeItem("userToken");  // clear token/session
-    // Clear other session items if needed
-
-    // Redirect to sign-in page
+  const handleLogout = async () => {
+    await logout(); // Await if logout is async
     navigate("/auth/sign-in");
   };
-
-  const { currentUser, logout } = useContext(AuthContext);
 
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
       className={`rounded-xl transition-all ${fixedNavbar
-          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
-          : "px-0 py-1"
+        ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+        : "px-0 py-1"
         }`}
       fullWidth
-      blurred={fixedNavbar}>
-
+      blurred={fixedNavbar}
+    >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
+        {/* Breadcrumbs & Page Title */}
         <div className="capitalize">
-          <Breadcrumbs
-            className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-1" : ""
-              }`}
-          >
+          <Breadcrumbs className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-1" : ""}`}>
             <Link to={`/${layout}`}>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
-              >
+              <Typography variant="small" color="blue-gray" className="font-normal opacity-50 hover:text-blue-500 hover:opacity-100">
                 {layout}
               </Typography>
             </Link>
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="font-normal"
-            >
+            <Typography variant="small" color="blue-gray" className="font-normal">
               {page}
             </Typography>
           </Breadcrumbs>
-          <Typography variant="h6" color="blue-gray">
-            {page}
-          </Typography>
+          <Typography variant="h6" color="blue-gray">{page}</Typography>
         </div>
+
+        {/* Right Side Buttons */}
         <div className="flex items-center">
           <IconButton
             variant="text"
@@ -93,14 +62,14 @@ export function DashboardNavbar() {
             className="grid xl:hidden"
             onClick={() => setOpenSidenav(dispatch, !openSidenav)}
           >
-            {/* Bars3Icon here */}
+            <Bars3Icon className="h-6 w-6" />
           </IconButton>
 
-          {isLoggedIn ? (
+          {currentUser ? (
             <Button
               variant="text"
               color="blue-gray"
-              className="hidden items-center gap-1 px-4 xl:flex normal-case"
+              className="hidden xl:flex gap-1 normal-case"
               onClick={handleLogout}
             >
               Logout
@@ -110,16 +79,12 @@ export function DashboardNavbar() {
               <Button
                 variant="text"
                 color="blue-gray"
-                className="hidden items-center gap-1 px-4 xl:flex normal-case"
+                className="hidden xl:flex gap-1 normal-case"
               >
                 <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
                 Sign In
               </Button>
-              <IconButton
-                variant="text"
-                color="blue-gray"
-                className="grid xl:hidden"
-              >
+              <IconButton variant="text" color="blue-gray" className="grid xl:hidden">
                 <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
               </IconButton>
             </Link>
@@ -129,7 +94,3 @@ export function DashboardNavbar() {
     </Navbar>
   );
 }
-
-DashboardNavbar.displayName = "/src/widgets/layout/dashboard-navbar.jsx";
-
-export default DashboardNavbar;
