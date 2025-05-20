@@ -16,6 +16,21 @@ export function Auth() {
       icon: ChartPieIcon,
     },
     {
+      name: "enhanced image",
+      path: "/dashboard/enhanceimage",
+      icon: ChartPieIcon,
+    },
+    {
+      name: "text to image",
+      path: "/dashboard/texttoimage",
+      icon: ChartPieIcon,
+    },
+    {
+      name: "gallery",
+      path: "/dashboard/gallery",
+      icon: ChartPieIcon,
+    },
+    {
       name: "profile",
       path: "/dashboard/home",
       icon: UserIcon,
