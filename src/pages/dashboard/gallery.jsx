@@ -21,9 +21,17 @@ export default function Gallery() {
     link.click();
   };
 
+  const handleDelete = (indexToDelete) => {
+    const updatedImages = images.filter((_, index) => index !== indexToDelete);
+    setImages(updatedImages);
+    localStorage.setItem("gallery", JSON.stringify(updatedImages));
+  };
+
   return (
     <div className="p-4">
-      <Typography variant="h4" className="mb-4 font-bold">Gallery Page</Typography>
+      <Typography variant="h4" className="mb-4 font-bold">
+        Gallery Page
+      </Typography>
 
       {images.length === 0 ? (
         <Typography variant="paragraph">No saved designs found.</Typography>
@@ -32,17 +40,31 @@ export default function Gallery() {
           {images.map((img, index) => (
             <Card key={index} className="shadow-md">
               <CardBody>
-                <img src={img.url} alt={`Design ${index + 1}`} className="rounded-lg mb-2" />
+                <img
+                  src={img.url}
+                  alt={`Design ${index + 1}`}
+                  className="rounded-lg mb-2"
+                />
                 <Typography variant="small" className="mb-2 text-center">
                   Style: {img.style}
                 </Typography>
-                <Button
-                  size="sm"
-                  className="w-full"
-                  onClick={() => handleDownload(img.url, index)}
-                >
-                  Save Image
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="w-full"
+                    onClick={() => handleDownload(img.url, index)}
+                  >
+                    Save Image
+                  </Button>
+                  <Button
+                    size="sm"
+                    color="red"
+                    className="w-full"
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </CardBody>
             </Card>
           ))}
