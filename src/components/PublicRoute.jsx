@@ -7,7 +7,7 @@ export default function PublicRoute({ children }) {
 
      if (currentUser) {
           // Redirect authenticated users to dashboard or home
-          return <Navigate to="/dashboard/home" replace />;
+          return <Navigate to="/dashboard/gallery" replace />;
      }
 
      return children;

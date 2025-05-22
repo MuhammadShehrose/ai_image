@@ -84,6 +84,7 @@ export default function EnhanceImage() {
             {
               model: "dall-e-3",
               prompt: `Generate a photorealistic interior design in ${style} style based on this description: ${description}. Create a high-resolution, professionally rendered image that faithfully maintains the original room's layout, dimensions, and spatial arrangement while completely transforming its aesthetic to embody authentic ${style} design principles. Ensure all architectural features, furniture placement, and functional zones remain in their original positions, but reimagine every visual element—including furniture pieces, materials, color palette, lighting fixtures, wall treatments, flooring, textiles, and decorative objects—to exemplify the distinctive characteristics of ${style} design. Pay careful attention to accurate material rendering, natural lighting effects, realistic textures, and proper perspective to achieve a photorealistic quality. The final image should look like a professional interior photography shot that convincingly presents how this exact space would appear if expertly redesigned in a beautiful, sophisticated ${style} aesthetic while preserving its original spatial integrity and functionality.`,
+              // prompt: `Generate a photorealistic interior design in ${style} style based on this description: ${description}.`,
               n: 1,
               size: "1024x1024",
             },
