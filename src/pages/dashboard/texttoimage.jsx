@@ -1,85 +1,115 @@
-import { useState } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Tabs,
-  TabsHeader,
-  TabsBody,
-  Tab,
-  TabPanel,
-  Input,
-  Textarea,
-  Typography,
-} from "@material-tailwind/react";
+import React, { useState } from "react";
+import axios from "axios";
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 export default function TextToImage() {
-  const [activeTab, setActiveTab] = useState("features");
   const [prompt, setPrompt] = useState("");
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [error, setError] = useState(null);
 
-  const handleGenerate = () => {
-    if (!prompt) return alert("Please enter a text prompt.");
-    
-    // Simulate AI image generation
-    setTimeout(() => {
-      setGeneratedImage("https://via.placeholder.com/400x300.png?text=Generated+Image");
-    }, 1500);
+  const auth = getAuth();
+  const db = getFirestore();
+
+  const handleGenerate = async () => {
+    if (!prompt || prompt.trim().length < 5) {
+      setError("Please enter a more descriptive prompt.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setImageUrl(null);
+
+    const encodedParams = new URLSearchParams();
+    encodedParams.set("prompt", prompt);
+    encodedParams.set("width", "1024");
+    encodedParams.set("height", "1024");
+    encodedParams.set("seed", "918440");
+    encodedParams.set("model", "flux");
+
+    const options = {
+      method: "POST",
+      url: "https://ai-text-to-image-generator-flux-free-api.p.rapidapi.com/aaaaaaaaaaaaaaaaaiimagegenerator/fluximagegenerate/generateimage.php",
+      headers: {
+        "x-rapidapi-key": "bae1c67a2bmsh5e36da8a32e7a97p1e2bacjsnc2240f23cc35",
+        "x-rapidapi-host": "ai-text-to-image-generator-flux-free-api.p.rapidapi.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: encodedParams,
+      responseType: "blob",
+    };
+
+    try {
+      const response = await axios.request(options);
+      const imageBlob = response.data;
+      const imageObjectUrl = URL.createObjectURL(imageBlob);
+
+      // Save image URL to display
+      setImageUrl(imageObjectUrl);
+
+      // 🔁 Convert Blob to Base64
+      const base64 = await convertBlobToBase64(imageBlob);
+
+      // Save to Firestore (optional)
+      const user = auth.currentUser;
+      if (user) {
+        await addDoc(collection(db, "images"), {
+          user_id: user.uid,
+          prompt: prompt,
+          image: base64,
+          createdAt: new Date(),
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An error occurred while generating the image.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔁 Convert Blob to Base64
+  const convertBlobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result); // result includes `data:image/...`
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   };
 
   return (
-    <div className="p-4">
-      <Typography variant="h4" className="mb-4 font-bold">Text to Image Page</Typography>
+    <div className="w-full max-w-none mx-auto mt-10 p-4 border rounded">
+      <textarea
+        className="w-full p-2 border rounded mb-4"
+        rows="5"
+        placeholder="Enter prompt..."
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+      />
 
-      <Card>
-        <CardBody>
-          <Tabs value={activeTab}>
-            <TabsHeader>
-              <Tab value="features" onClick={() => setActiveTab("features")}>
-                Features
-              </Tab>
-              <Tab value="editor" onClick={() => setActiveTab("editor")}>
-                Editor
-              </Tab>
-            </TabsHeader>
+      <button
+        onClick={handleGenerate}
+        disabled={loading}
+        className="bg-black text-white px-4 py-2 rounded hover:bg-black opacity-80"
+      >
+        {loading ? "Generating..." : "Generate Image"}
+      </button>
 
-            <TabsBody>
-              <TabPanel value="features">
-                <div className="flex flex-col items-center gap-4">
-                  <Typography variant="h6">Start designing AI-generated images or videos based on your prompts.</Typography>
-                  <Button onClick={() => setActiveTab("editor")} className="w-[200px]">
-                    Start Designing
-                  </Button>
-                </div>
-              </TabPanel>
+      {error && <p className="text-red-600 mt-2">{error}</p>}
 
-              <TabPanel value="editor">
-                <div className="flex flex-col gap-4">
-                  <Textarea
-                    label="Enter your text prompt"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                  />
-                  <Button onClick={handleGenerate} className="w-[200px]">
-                    Generate Image
-                  </Button>
-
-                  {generatedImage && (
-                    <div className="mt-6">
-                      <Typography variant="small" className="mb-2">Generated Result</Typography>
-                      <img
-                        src={generatedImage}
-                        alt="Generated"
-                        className="rounded-lg shadow-lg max-w-full h-auto"
-                      />
-                    </div>
-                  )}
-                </div>
-              </TabPanel>
-            </TabsBody>
-          </Tabs>
-        </CardBody>
-      </Card>
+      {imageUrl && (
+        <div className="mt-6">
+          <p className="mb-2 font-semibold">Generated Image:</p>
+          <img
+            src={imageUrl}
+            alt="Generated"
+            className="w-full rounded border"
+          />
+        </div>
+      )}
     </div>
   );
 }

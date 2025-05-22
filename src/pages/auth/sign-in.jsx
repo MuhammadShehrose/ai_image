@@ -30,7 +30,7 @@ export function SignIn() {
     try {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       // Success: redirect to dashboard/home
-      navigate("/dashboard/home");
+      navigate("/dashboard/gallery");
     } catch (err) {
       // Show error message on failure
       setError("Invalid email or password. Please try again.");
