@@ -10,11 +10,13 @@ import EnhanceImage from "@/pages/dashboard/EnhanceImage";
 import TextToImage from "@/pages/dashboard/TextToImage";
 import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
+import Users from "@/pages/dashboard/users";
 
-import PrivateRoute from "@/components/PrivateRoute"; // 👈 Make sure this file exists
-import PublicRoute from "@/components/PublicRoute"; // 👈 Make sure this file exist s
-import { TrashIcon } from "@heroicons/react/24/solid"; // 👈 new icon
-import DeleteAccount from "@/pages/dashboard/DeleteAccount"; // 👈 new page
+import PrivateRoute from "@/components/PrivateRoute";
+import PublicRoute from "@/components/PublicRoute";
+import UsersRoute from "@/components/AdminRoute";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import DeleteAccount from "@/pages/dashboard/DeleteAccount";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -74,7 +76,18 @@ export const routes = [
           </PrivateRoute>
         ),
       },
+      {
+        icon: <DocumentTextIcon {...icon} />,
+        name: "Users",
+        path: "/Users",
+        element: (
+          <UsersRoute>
+            <Users />
+          </UsersRoute>
+        ),
+      },
     ],
+
   },
   {
     layout: "auth",

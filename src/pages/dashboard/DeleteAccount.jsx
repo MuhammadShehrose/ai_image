@@ -52,7 +52,7 @@ export default function DeleteAccount() {
       await deleteUser(user);
 
       alert("Account and data deleted successfully.");
-      navigate("/sign-in");
+      navigate("/sign-up");
     } catch (error) {
       console.error("Error deleting account:", error);
       alert("Failed to delete account: " + error.message);

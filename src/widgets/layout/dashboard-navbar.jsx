@@ -67,9 +67,9 @@ export function DashboardNavbar() {
 
           {currentUser ? (
             <Button
-              variant="text"
-              color="blue-gray"
-              className="hidden xl:flex gap-1 normal-case"
+              variant="gradient"
+              color="red"
+              className="hidden xl:flex gap-1 normal-case font-bold px-6 py-2 rounded shadow-md hover:scale-105 transition-transform duration-150"
               onClick={handleLogout}
             >
               Logout
