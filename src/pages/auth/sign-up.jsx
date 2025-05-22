@@ -44,7 +44,7 @@ export function SignUp() {
       });
 
       // alert("Account created successfully!");
-      navigate("/dashboard/home");
+      navigate("/dashboard/gallery");
     } catch (error) {
       console.error("Signup error:", error.message);
       alert(error.message);
