@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   Input,
@@ -9,18 +9,29 @@ import {
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 
 
 export function SignIn() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const auth = getAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.type === "admin") {
+        navigate("/dashboard/admin-panel"); // or wherever your admin dashboard is
+      } else {
+        navigate("/dashboard/home"); // regular user dashboard
+      }
+    }
+  }, [currentUser, navigate]);
 
 
   const handleSubmit = async (e) => {

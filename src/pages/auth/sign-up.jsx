@@ -19,6 +19,7 @@ export function SignUp() {
     name: "",
     email: "",
     password: "",
+    type: "user",
   });
 
   const handleChange = (e) => {
@@ -32,7 +33,8 @@ export function SignUp() {
       const { user } = await createUserWithEmailAndPassword(
         auth,
         formData.email,
-        formData.password
+        formData.password,
+        formData.type
       );
 
       // Save user info in Firestore
@@ -40,7 +42,8 @@ export function SignUp() {
         uid: user.uid,
         name: formData.name,
         email: formData.email,
-        createdAt: new Date()
+        createdAt: new Date(),
+        type: formData.type
       });
 
       // alert("Account created successfully!");
@@ -53,7 +56,7 @@ export function SignUp() {
 
   return (
     <section className="m-8 flex">
-            <div className="w-2/5 h-full hidden lg:block">
+      <div className="w-2/5 h-full hidden lg:block">
         <img
           src="/img/pattern.png"
           className="h-full w-full object-cover rounded-3xl"
