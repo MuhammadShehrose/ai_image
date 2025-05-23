@@ -3,6 +3,7 @@ import {
   PhotoIcon,
   DocumentTextIcon,
   Squares2X2Icon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 
 import { Home } from "@/pages/dashboard";
@@ -11,6 +12,7 @@ import TextToImage from "@/pages/dashboard/TextToImage";
 import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
 import Users from "@/pages/dashboard/users";
+import ApiConfigPage from "@/pages/dashboard/ApiConfigPage";
 
 import PrivateRoute from "@/components/PrivateRoute";
 import PublicRoute from "@/components/PublicRoute";
@@ -86,6 +88,16 @@ export const routes = [
           </UsersRoute>
         ),
       },
+      {
+        icon: <Cog6ToothIcon {...icon} />,
+        name: "API Config",
+        path: "/api-config",
+        element: (
+          <UsersRoute>
+            <ApiConfigPage />
+          </UsersRoute>
+        ),
+      }
     ],
 
   },

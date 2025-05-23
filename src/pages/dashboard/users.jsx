@@ -188,7 +188,7 @@ const Users = () => {
                     await deleteDoc(doc(db, "users", userId));
 
                     // Remove user from UI
-                    setUsers((prev) => prev.filter((user) => user.id !== userId));
+                    setUsers((prev) => prev.filter((user) => user.id !== useruid));
 
                     alert("User and associated data deleted.");
                } catch (error) {
