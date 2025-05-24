@@ -282,13 +282,16 @@ export default function TextToImage() {
   const handleGenerate = async () => {
     if (!prompt || prompt.trim().length < 5) {
       setError("Please enter a more descriptive prompt.");
-      await incrementUsage(); // Still increment on bad prompt
       return;
     }
 
     if (!apiKeyData?.api_key || !apiKeyData?.api_host) {
       setError("No active API key is configured.");
-      await incrementUsage(); // Still increment on missing config
+      return;
+    }
+
+    if (apiKeyData?.count > 24) {
+      setError("Limit reached for active API key.");
       return;
     }
 
@@ -308,7 +311,7 @@ export default function TextToImage() {
       url: "https://ai-text-to-image-generator-flux-free-api.p.rapidapi.com/aaaaaaaaaaaaaaaaaiimagegenerator/fluximagegenerate/generateimage.php",
       headers: {
         "x-rapidapi-key": apiKeyData.api_key,
-        "x-rapidapi-host": apiKeyData.api_host,
+        "x-rapidapi-host": "http://ai-text-to-image-generator-flux-free-api.p.rapidapi.com",
         "Content-Type": "application/x-www-form-urlencoded",
       },
       data: encodedParams,
@@ -321,22 +324,24 @@ export default function TextToImage() {
       const imageObjectUrl = URL.createObjectURL(imageBlob);
       setImageUrl(imageObjectUrl);
 
+      // Convert to base64
       const base64 = await convertBlobToBase64(imageBlob);
-      const user = auth.currentUser;
 
+      // Save to Firestore
+      const user = auth.currentUser;
       if (user) {
         await addDoc(collection(db, "images"), {
           user_id: user.uid,
-          prompt,
+          prompt: prompt,
           image: base64,
           createdAt: new Date(),
         });
+        // await incrementUsage();
+        await incrementUsage();
       }
     } catch (err) {
-      console.error(err);
       setError("An error occurred while generating the image.");
     } finally {
-      await incrementUsage(); // Always increment on any result
       setLoading(false);
     }
   };
