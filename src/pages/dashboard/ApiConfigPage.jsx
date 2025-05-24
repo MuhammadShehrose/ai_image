@@ -122,7 +122,7 @@ import { db } from "@/firebase";
 
 const ApiConfigPage = () => {
      const [keys, setKeys] = useState([]);
-     const [newKey, setNewKey] = useState({ api_key: "", api_host: "" });
+     const [newKey, setNewKey] = useState({ api_key: "", api_host: "http://ai-text-to-image-generator-flux-free-api.p.rapidapi.com" });
      const [loading, setLoading] = useState(false);
 
      useEffect(() => {
@@ -137,7 +137,7 @@ const ApiConfigPage = () => {
 
      const handleAddKey = async (e) => {
           e.preventDefault();
-          if (!newKey.api_key || !newKey.api_host) return alert("All fields are required");
+          if (!newKey.api_key) return alert("All fields are required");
           setLoading(true);
 
           // Deactivate existing active keys
@@ -185,12 +185,6 @@ const ApiConfigPage = () => {
                          value={newKey.api_key}
                          onChange={(e) => setNewKey((prev) => ({ ...prev, api_key: e.target.value }))}
                     />
-                    <Input
-                         label="API Host"
-                         name="api_host"
-                         value={newKey.api_host}
-                         onChange={(e) => setNewKey((prev) => ({ ...prev, api_host: e.target.value }))}
-                    />
                     <button
                          type="submit"
                          disabled={loading}
@@ -206,7 +200,7 @@ const ApiConfigPage = () => {
                          <thead className="bg-gray-100">
                               <tr>
                                    <th className="p-2">Key</th>
-                                   <th className="p-2">Host</th>
+                                   {/* <th className="p-2">Host</th> */}
                                    <th className="p-2">Count</th>
                                    <th className="p-2">Status</th>
                                    <th className="p-2">Toggle</th>
@@ -216,8 +210,8 @@ const ApiConfigPage = () => {
                               {keys.map((key) => (
                                    <tr key={key.id} className="border-t border-gray-300">
                                         <td className="p-2">{key.api_key}</td>
-                                        <td className="p-2">{key.api_host}</td>
-                                        <td className="p-2 text-center">{key.count ?? 0}</td>
+                                        {/* <td className="p-2">{key.api_host}</td> */}
+                                        <td className="p-2">{key.count ?? 0}</td>
                                         <td className="p-2 capitalize">{key.status}</td>
                                         <td className="p-2">
                                              <Switch
