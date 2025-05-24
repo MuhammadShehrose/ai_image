@@ -64,6 +64,9 @@ export function SignUp() {
       </div>
       <div className="w-full lg:w-3/5 flex flex-col items-center justify-center">
         <div className="text-center">
+          <Link to="/" className="text-black hover:text-purple-300 transition-colors duration-300 px-3 font-bold">
+            <Typography variant="h1" className="font-bold">AI Images</Typography>
+          </Link>
           <Typography variant="h2" className="font-bold mb-4">Join Us Today</Typography>
           <Typography variant="paragraph" color="blue-gray" className="text-lg font-normal">Enter your email and password to register.</Typography>
         </div>

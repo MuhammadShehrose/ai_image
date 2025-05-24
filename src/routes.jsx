@@ -90,6 +90,16 @@ export const routes = [
         ),
       },
       {
+        icon: <HomeIcon {...icon} />,
+        name: "Website",
+        path: "/landing",
+        element: (
+          <PrivateRoute>
+            <LandingPage />
+          </PrivateRoute>
+        ),
+      },
+      {
         icon: <DocumentTextIcon {...icon} />,
         name: "Users",
         path: "/Users",

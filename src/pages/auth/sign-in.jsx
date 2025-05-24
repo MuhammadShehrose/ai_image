@@ -53,6 +53,9 @@ export function SignIn() {
     <section className="m-8 flex gap-4">
       <div className="w-full lg:w-3/5 mt-24">
         <div className="text-center">
+          <Link to="/" className="text-black hover:text-purple-300 transition-colors duration-300 px-3 font-bold">
+            <Typography variant="h1" className="font-bold">AI Images</Typography>
+          </Link>
           <Typography variant="h2" className="font-bold mb-4">Sign In</Typography>
           <Typography variant="paragraph" color="blue-gray" className="text-lg font-normal">Enter your email and password to Sign In.</Typography>
         </div>

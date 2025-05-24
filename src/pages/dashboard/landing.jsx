@@ -15,7 +15,7 @@ import {
      Clock
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
-import HomeSection from "@/pages/components/Homesection";
+import TextToImageHome from "@/pages/components/TextToImageHome";
 // Import your AuthContext
 import { AuthContext } from "../../context/AuthContext"; // Adjust path as needed
 
@@ -145,13 +145,13 @@ const LandingPage = () => {
                                         <Sparkles className="w-6 h-6 text-white" />
                                    </div>
                                    <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                        PixelForge AI
+                                        AI Images
                                    </span>
                               </div>
 
                               {/* Desktop Menu */}
                               <div className="hidden md:flex items-center space-x-8">
-                                   {['Home', 'Generate', 'Gallery', 'Features', 'Pricing', 'About'].map((item) => {
+                                   {/* {['Home', 'Generate', 'Gallery', 'Features', 'Pricing', 'About'].map((item) => {
                                         let path = "/";
                                         if (item !== "Home") path = `/${item.toLowerCase()}`;
                                         return (
@@ -163,18 +163,26 @@ const LandingPage = () => {
                                                   {item}
                                              </Link>
                                         );
-                                   })}
+                                   })} */}
                                    {currentUser ? (
-                                        <button
-                                             onClick={handleLogout}
-                                             className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2 font-bold"
-                                        >
-                                             Logout
-                                        </button>
+                                        <>
+                                             <Link
+                                                  to="/dashboard/gallery"
+                                                  className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2 font-bold"
+                                             >
+                                                  Dashboard
+                                             </Link>
+                                             <button
+                                                  onClick={handleLogout}
+                                                  className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2 font-bold"
+                                             >
+                                                  Logout
+                                             </button>
+                                        </>
                                    ) : (
                                         <>
-                                             <Link to="/signup" className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2">SignUp</Link>
-                                             <Link to="/signin" className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2">SignIn</Link>
+                                             <Link to="/auth/sign-in" className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2">Sign In</Link>
+                                             <Link to="/auth/sign-up" className="text-black hover:text-purple-300 transition-colors duration-300 px-3 py-2">Sign Up</Link>
                                         </>
                                    )}
                               </div>
@@ -209,10 +217,13 @@ const LandingPage = () => {
                                         >
                                              Logout
                                         </button>
+                                        // dashboard btn
+
+                                        // <Link to="/dashboard" className="block w-full text-left text-white hover:text-purple-300 transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
                                    ) : (
                                         <>
-                                             <Link to="/signup" className="block w-full text-left text-white hover:text-purple-300 transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>SignUp</Link>
-                                             <Link to="/signin" className="block w-full text-left text-white hover:text-purple-300 transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>SignIn</Link>
+                                             <Link to="/auth/sign-in" className="block w-full text-left text-white hover:text-purple-300 transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+                                             <Link to="/auth/sign-up" className="block w-full text-left text-white hover:text-purple-300 transition-colors duration-300 py-2" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
                                         </>
                                    )}
                               </div>
@@ -222,7 +233,7 @@ const LandingPage = () => {
 
                {/* Hero Section */}
                {!currentUser && (
-                    <div className="relative pt-24 pb-16">
+                    <div className="relative">
                          <div className="max-w-7xl mx-auto px-4 lg:px-8">
                               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
                                    <div className="space-y-8 animate-slide-up">
@@ -241,18 +252,6 @@ const LandingPage = () => {
                                         <p className="text-slate-300 text-xl leading-relaxed max-w-lg">
                                              Transform your imagination into stunning visual masterpieces with our cutting-edge AI technology. Create professional-quality images in seconds.
                                         </p>
-
-                                        <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                                             <button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg shadow-purple-500/30 transform hover:scale-105 transition-all duration-300 flex items-center justify-center group">
-                                                  Start Creating Free
-                                                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                                             </button>
-
-                                             <button className="border-2 border-purple-400 text-purple-400 hover:bg-purple-400/10 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 flex items-center justify-center">
-                                                  <Play className="w-5 h-5 mr-2" />
-                                                  Watch Demo
-                                             </button>
-                                        </div>
 
                                         {/* Stats */}
                                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-8">
@@ -316,7 +315,7 @@ const LandingPage = () => {
 
                {currentUser &&
                     <div className='pt-24 pb-16'>
-                         <HomeSection />
+                         <TextToImageHome />
                     </div>}
 
                {/* Features Section */}
@@ -364,40 +363,34 @@ const LandingPage = () => {
                                         Ready to Create Amazing Images?
                                    </h2>
                                    <p className="text-slate-300 text-xl mb-8 max-w-2xl mx-auto">
-                                        Join thousands of creators who are already using PixelForge AI to bring their ideas to life
+                                        Join thousands of creators who are already using AI to bring their ideas to life
                                    </p>
-                                   <button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12 py-4 rounded-lg text-lg font-semibold shadow-lg shadow-purple-500/30 transform hover:scale-105 transition-all duration-300">
+                                   {/* <button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12 py-4 rounded-lg text-lg font-semibold shadow-lg shadow-purple-500/30 transform hover:scale-105 transition-all duration-300">
                                         Get Started Now
-                                   </button>
+                                   </button> */}
                               </div>
                          </div>
                     </div>
                </div>
 
-               {/* Scroll Indicator */}
-               <button
-                    className="fixed bottom-8 right-8 w-14 h-14 bg-purple-500 hover:bg-purple-600 text-white rounded-full shadow-lg shadow-purple-500/30 flex items-center justify-center animate-bounce transition-all duration-300 hover:scale-110"
-                    onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-               >
-                    <ChevronDown className="w-6 h-6" />
-               </button>
-
-               <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes slide-up {
-          0% { opacity: 0; transform: translateY(50px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .animate-slide-up {
-          animation: slide-up 1s ease-out;
-        }
-      `}</style>
+               <style jsx>
+                    {`
+                         @keyframes float {
+                              0%, 100% { transform: translateY(0px); }
+                              50% { transform: translateY(-20px); }
+                         }
+                         @keyframes slide-up {
+                              0% { opacity: 0; transform: translateY(50px); }
+                              100% { opacity: 1; transform: translateY(0); }
+                         }
+                         .animate-float {
+                              animation: float 6s ease-in-out infinite;
+                         }
+                         .animate-slide-up {
+                              animation: slide-up 1s ease-out;
+                         }
+                    `}
+               </style>
           </div>
      );
 };
