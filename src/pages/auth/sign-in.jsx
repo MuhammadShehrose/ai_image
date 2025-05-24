@@ -28,7 +28,7 @@ export function SignIn() {
       if (currentUser.type === "admin") {
         navigate("/dashboard/admin-panel"); // or wherever your admin dashboard is
       } else {
-        navigate("/dashboard/home"); // regular user dashboard
+        navigate("/"); // regular user dashboard
       }
     }
   }, [currentUser, navigate]);
@@ -41,7 +41,7 @@ export function SignIn() {
     try {
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       // Success: redirect to dashboard/home
-      navigate("/dashboard/gallery");
+      navigate("/");
     } catch (err) {
       // Show error message on failure
       setError("Invalid email or password. Please try again.");
