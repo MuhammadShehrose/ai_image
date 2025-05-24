@@ -169,7 +169,7 @@ const Users = () => {
                return;
           }
 
-          if (window.confirm("Are you sure you want to delete this user and all their data?")) {
+          if (window.confirm("Are you sure you want to delete this user's data?")) {
                try {
                     const db = getFirestore();
 
@@ -185,12 +185,12 @@ const Users = () => {
                     await Promise.all(imageDeletions);
 
                     // Delete user document
-                    await deleteDoc(doc(db, "users", userId));
+                    // await deleteDoc(doc(db, "users", userId));
 
                     // Remove user from UI
-                    setUsers((prev) => prev.filter((user) => user.id !== useruid));
+                    // setUsers((prev) => prev.filter((user) => user.id !== userId));
 
-                    alert("User and associated data deleted.");
+                    alert("Associated data to this user has been deleted successfully.");
                } catch (error) {
                     console.error("Error deleting user:", error);
                     alert("Failed to delete user: " + error.message);
@@ -252,7 +252,7 @@ const Users = () => {
                                                             disabled={user.type === "admin"}
                                                             onClick={() => handleDelete(user.id, user.uid)} // ✅ pass user.uid
                                                        >
-                                                            Delete
+                                                            Delete User Data
                                                        </Button>
 
                                                   </td>
