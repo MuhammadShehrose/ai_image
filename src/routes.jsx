@@ -19,12 +19,23 @@ import PublicRoute from "@/components/PublicRoute";
 import UsersRoute from "@/components/AdminRoute";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import DeleteAccount from "@/pages/dashboard/DeleteAccount";
+import LandingPage from "@/pages/dashboard/landing";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
 
 export const routes = [
+  // Landing page route
+  {
+    layout: "landing",
+    pages: [
+      {
+        path: "/",
+        element: <LandingPage />,
+      },
+    ],
+  },
   {
     layout: "dashboard",
     pages: [
