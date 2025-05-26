@@ -311,7 +311,7 @@ export default function TextToImage() {
       url: "https://ai-text-to-image-generator-flux-free-api.p.rapidapi.com/aaaaaaaaaaaaaaaaaiimagegenerator/fluximagegenerate/generateimage.php",
       headers: {
         "x-rapidapi-key": apiKeyData.api_key,
-        "x-rapidapi-host": "ai-text-to-image-generator-flux-free-api.p.rapidapi.com",
+        "x-rapidapi-host": apiKeyData.api_host,
         "Content-Type": "application/x-www-form-urlencoded",
       },
       data: encodedParams,
