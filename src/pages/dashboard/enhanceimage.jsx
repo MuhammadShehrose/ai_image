@@ -36,10 +36,11 @@ const ImageToImage = () => {
   //     return;
   //   }
 
-  //   if (file.size > 1024 * 1024) { // 1MB = 1048576 bytes
-  //     setError("Image size must be less than 1 MB.");
-  //     return;
-  //   }
+
+  if (file.size > 3 * 1024 * 1024) { // 3MB = 3 * 1024 * 1024 bytes
+    setError("Image size must be less than 1 MB.");
+    return;
+  }
 
   //   if (!style) {
   //     setError("Please select a style.");
@@ -139,11 +140,18 @@ const ImageToImage = () => {
 
       // ✅ Step 4: Convert and save image
       const imageResponse = await fetch(response.data.output);
-      const imageBlob = await imageResponse.blob();
 
+      let imageBlob = await imageResponse.blob();
       if (imageBlob.size > 1024 * 1024) {
-        setError("Generated image is too large to store in database (over 1MB).");
-        return;
+        // Try compressing
+        const compressedBlob = await compressImageBlob(imageBlob, 0.7);
+        if (compressedBlob && compressedBlob.size <= 1024 * 1024) {
+          imageBlob = compressedBlob;
+        } else {
+          setOutputUrl(response.data.output);
+          setError("Generated image is too large to store in database (over 1MB) even after compression.");
+          return;
+        }
       }
 
       const base64 = await convertBlobToBase64(imageBlob);
@@ -174,6 +182,23 @@ const ImageToImage = () => {
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
+
+  const compressImageBlob = (blob, quality = 0.7) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((compressedBlob) => {
+          resolve(compressedBlob);
+        }, "image/jpeg", quality); // convert to JPEG
+      };
+      img.src = URL.createObjectURL(blob);
+    });
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
