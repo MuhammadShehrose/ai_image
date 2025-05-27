@@ -1,293 +1,209 @@
-// import { useState } from "react";
-// import {
-//   Card,
-//   CardBody,
-//   Button,
-//   Typography,
-//   Select,
-//   Option,
-// } from "@material-tailwind/react";
-// import axios from "axios";
-// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-// import { getFirestore, collection, addDoc } from "firebase/firestore";
-// import { getAuth } from "firebase/auth";
-
-// export default function EnhanceImage() {
-//   const [originalImage, setOriginalImage] = useState(null);
-//   const [enhancedImage, setEnhancedImage] = useState(null);
-//   const [style, setStyle] = useState("");
-//   const [uploading, setUploading] = useState(false);
-
-//   const auth = getAuth();
-//   const storage = getStorage();
-//   const firestore = getFirestore();
-
-//   const handleImageUpload = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       setOriginalImage(file);
-//     }
-//   };
-
-//   const handleGenerate = async () => {
-//     if (!originalImage || !style) {
-//       alert("Please upload image and select style");
-//       return;
-//     }
-
-//     setUploading(true);
-
-//     try {
-//       // Convert image to base64
-//       const reader = new FileReader();
-//       reader.readAsDataURL(originalImage);
-//       reader.onloadend = async () => {
-//         try {
-//           // Step 1: Use GPT-4 Vision to analyze the image and create a detailed description
-//           const visionResponse = await axios.post(
-//             "https://api.openai.com/v1/chat/completions",
-//             {
-//               model: "gpt-4o",
-//               messages: [
-//                 {
-//                   role: "user",
-//                   content: [
-//                     { 
-//                       type: "text", 
-//                       text: `Using the provided room image as reference, create a detailed description that captures all essential elements while reimagining it in ${style} aesthetic. Analyze the room's spatial layout, furniture arrangement, and architectural features, then describe how these would transform while maintaining the space's core functionality. Include specifics about the adapted color palette, materials, textures, lighting, wall treatments, floor coverings, and decorative elements that would authentically represent the ${style}. Focus on how key pieces would be reinterpreted through this stylistic lens, preserving the room's purpose and spatial flow while completely embracing the visual language and characteristics of the ${style}. The description should be comprehensive enough to serve as a detailed reference for generating a new version of the room that honors both the original layout and the distinctive qualities of the chosen aesthetic.` 
-//                     },
-//                     {
-//                       type: "image_url",
-//                       image_url: {
-//                         url: reader.result
-//                       }
-//                     }
-//                   ]
-//                 }
-//               ],
-//               max_tokens: 300
-//             },
-//             {
-//               headers: {
-//                 Authorization: `Bearer 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`,
-//                 "Content-Type": "application/json",
-//               },
-//             }
-//           );
-
-//           // Step 2: Get the description from GPT-4 Vision
-//           const description = visionResponse.data.choices[0].message.content;
-
-//           // Step 3: Use DALL-E to generate a new image based on the description
-//           const imageGenResponse = await axios.post(
-//             "https://api.openai.com/v1/images/generations",
-//             {
-//               model: "dall-e-3",
-//               prompt: `Generate a photorealistic interior design in ${style} style based on this description: ${description}. Create a high-resolution, professionally rendered image that faithfully maintains the original room's layout, dimensions, and spatial arrangement while completely transforming its aesthetic to embody authentic ${style} design principles. Ensure all architectural features, furniture placement, and functional zones remain in their original positions, but reimagine every visual element—including furniture pieces, materials, color palette, lighting fixtures, wall treatments, flooring, textiles, and decorative objects—to exemplify the distinctive characteristics of ${style} design. Pay careful attention to accurate material rendering, natural lighting effects, realistic textures, and proper perspective to achieve a photorealistic quality. The final image should look like a professional interior photography shot that convincingly presents how this exact space would appear if expertly redesigned in a beautiful, sophisticated ${style} aesthetic while preserving its original spatial integrity and functionality.`,
-//               // prompt: `Generate a photorealistic interior design in ${style} style based on this description: ${description}.`,
-//               n: 1,
-//               size: "1024x1024",
-//             },
-//             {
-//               headers: {
-//                 Authorization: `Bearer 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`,
-//                 "Content-Type": "application/json",
-//               },
-//             }
-//           );
-
-//           const imageUrl = imageGenResponse.data.data[0].url;
-//           setEnhancedImage(imageUrl);
-
-//           // Step 4: Save to localStorage gallery
-//           const gallery = JSON.parse(localStorage.getItem("gallery")) || [];
-//           gallery.push({ url: imageUrl, style });
-//           localStorage.setItem("gallery", JSON.stringify(gallery));
-
-//           // Step 5: Upload to Firebase Storage
-//           const response = await fetch(imageUrl);
-//           const blob = await response.blob();
-//           const storageRef = ref(storage, `enhanced-images/${Date.now()}.jpg`);
-//           await uploadBytes(storageRef, blob);
-//           const downloadURL = await getDownloadURL(storageRef);
-
-//           // Step 6: Save metadata to Firestore
-//           const user = auth.currentUser;
-//           await addDoc(collection(firestore, "enhancedImages"), {
-//             userId: user?.uid,
-//             style,
-//             prompt: `Enhance the room in a ${style} style.`,
-//             imageUrl: downloadURL,
-//             createdAt: new Date(),
-//           });
-
-//           alert("Image enhanced and saved successfully!");
-//         } catch (error) {
-//           console.error("Error in AI processing:", error);
-//           // alert("Failed to enhance image: " + (error.response?.data?.error?.message || error.message));
-//         }
-//       };
-//     } catch (error) {
-//       console.error("Error enhancing image:", error);
-//       // alert("Failed to enhance image: " + (error.response?.data?.error?.message || error.message));
-//     } finally {
-//       setUploading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="mt-12 mb-8 flex flex-col gap-12">
-//       <Card>
-//         <CardBody className="px-4 pb-4">
-//           <Typography variant="h5" color="blue-gray" className="mb-4">
-//             Enhance Your Room Image
-//           </Typography>
-
-//           <div className="flex flex-col sm:flex-row gap-4 mb-6">
-//             <input
-//               type="file"
-//               accept="image/*"
-//               onChange={handleImageUpload}
-//               className="block w-full"
-//             />
-
-//             <Select label="Select Style" value={style} onChange={(val) => setStyle(val)}>
-//               <Option value="modern">Modern</Option>
-//               <Option value="minimalist">Minimalist</Option>
-//               <Option value="rustic">Rustic</Option>
-//             </Select>
-
-//             <Button onClick={handleGenerate} className="w-[350px] px-0" disabled={uploading}>
-//               {uploading ? "Enhancing..." : "Generate Image"}
-//             </Button>
-//           </div>
-
-//           {originalImage && enhancedImage && (
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-//               <div>
-//                 <Typography variant="small" className="mb-2">Original Image</Typography>
-//                 <img src={URL.createObjectURL(originalImage)} alt="Original" className="rounded-lg shadow-md" />
-//               </div>
-//               <div>
-//                 <Typography variant="small" className="mb-2">Enhanced Image ({style})</Typography>
-//                 <img src={enhancedImage} alt="Enhanced" className="rounded-lg shadow-md" />
-//               </div>
-//             </div>
-//           )}
-//         </CardBody>
-//       </Card>
-//     </div>
-//   );
-// }
-
-import { useState } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Typography,
-  Select,
-  Option,
-} from "@material-tailwind/react";
-import { getFirestore, collection, addDoc, Timestamp } from "firebase/firestore";
+import React, { useState } from "react";
+import axios from "axios";
 import { getAuth } from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 
-export default function EnhanceImage() {
-  const [originalImage, setOriginalImage] = useState(null); // Base64 string
-  const [enhancedImage, setEnhancedImage] = useState(null); // Base64 string
-  const [style, setStyle] = useState("");
+const styles = [
+  "Modern",
+  "Rustic",
+  "Bohemian",
+  "Minimalist",
+  "Industrial",
+  "Scandinavian",
+];
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file); // Convert to base64
-      reader.onloadend = () => {
-        const base64 = reader.result;
-        setOriginalImage(base64); // Save as base64
-      };
+const ImageToImage = () => {
+  const [loading, setLoading] = useState(false);
+  const [outputUrl, setOutputUrl] = useState(null);
+  const [error, setError] = useState(null);
+  const [file, setFile] = useState(null);
+  const [prompt, setPrompt] = useState("");
+  const [style, setStyle] = useState(styles[0]);
+  const auth = getAuth();
+  const db = getFirestore();
+
+  const generateImage = async () => {
+    if (!file) {
+      setError("Please select an image to upload.");
+      return;
     }
-  };
 
-  const handleGenerate = async () => {
-    if (!originalImage || !style) return alert("Please upload image and select style");
+    if (file.size > 1024 * 1024) { // 1MB = 1048576 bytes
+      setError("Image size must be less than 1 MB.");
+      return;
+    }
 
-    // Simulate image enhancement
-    setTimeout(async () => {
-      setEnhancedImage(originalImage); // Copy original image as "enhanced"
+    if (!style) {
+      setError("Please select a style.");
+      return;
+    }
 
-      // Store in localStorage (optional)
-      localStorage.setItem("enhanced-image", originalImage);
-      const gallery = JSON.parse(localStorage.getItem("gallery")) || [];
-      gallery.push({ url: originalImage, style });
-      localStorage.setItem("gallery", JSON.stringify(gallery));
+    if (!prompt || prompt.trim().length < 5) {
+      setError("Please enter a more descriptive prompt.");
+      return;
+    }
 
-      // Store in Firestore
-      try {
-        const auth = getAuth();
-        const user = auth.currentUser;
+    setLoading(true);
+    setError(null);
+    setOutputUrl(null);
 
-        if (!user) {
-          console.error("No user logged in");
-          return;
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("prompt", prompt);
+      formData.append("style", style);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/generate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
+      );
 
-        const db = getFirestore();
-        const docRef = await addDoc(collection(db, "images"), {
-          user_id: user.uid,
-          image: originalImage, // Base64 string
-          type: style,
-          createdAt: Timestamp.now(),
-        });
-
-        console.log("✅ Saved to Firestore with ID:", docRef.id);
-      } catch (error) {
-        console.error("❌ Error saving to Firestore:", error);
+      // Convert to base64
+      const imageResponse = await fetch(response.data.output);
+      const imageBlob = await imageResponse.blob();
+      if (imageBlob.size > 1024 * 1024) {
+        setError("Generated image is too large to store in database (over 1MB).");
+        return;
       }
-    }, 1500);
+      const base64 = await convertBlobToBase64(imageBlob);
+
+      // Save to Firestore
+      const user = auth.currentUser;
+      if (user) {
+        await addDoc(collection(db, "images"), {
+          user_id: user.uid,
+          prompt: prompt,
+          image: base64,
+          type: style,
+          createdAt: new Date(),
+        });
+      }
+
+      setOutputUrl(response.data.output);
+    } catch (err) {
+      setError("Failed to generate image.");
+    }
+
+    setLoading(false);
   };
+
+  const convertBlobToBase64 = (blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
 
   return (
-    <div className="mt-12 mb-8 flex flex-col gap-12">
-      <Card>
-        <CardBody className="px-4 pb-4">
-          <Typography variant="h5" color="blue-gray" className="mb-4">
-            Enhance Your Room Image
-          </Typography>
+    <div className="container mx-auto p-6 max-w-6xl">
+      <h1 className="text-3xl font-bold mb-8 text-center">Image to Image Generator</h1>
 
-          {/* Upload Input & Style Select */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="block w-full"
-            />
+      <div className="grid grid-cols-12 gap-6">
+        {/* File Upload - 6 columns */}
+        <div className="col-span-12 md:col-span-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Upload Image
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
+          />
+        </div>
 
-            <Select label="Select Style" value={style} onChange={(val) => setStyle(val)}>
-              <Option value="modern">Modern</Option>
-              <Option value="minimalist">Minimalist</Option>
-              <Option value="rustic">Rustic</Option>
-            </Select>
+        {/* Style Select - 6 columns */}
+        <div className="col-span-12 md:col-span-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Style
+          </label>
+          <select
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+          >
+            {styles.map((styleOption) => (
+              <option key={styleOption} value={styleOption}>
+                {styleOption}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            <Button onClick={handleGenerate} className="w-[350px] px-0">Generate Image</Button>
-          </div>
+        {/* Textarea - 12 columns */}
+        <div className="col-span-12">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Prompt Description
+          </label>
+          <textarea
+            rows={4}
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none"
+            placeholder="Enter your detailed prompt description..."
+          />
+        </div>
 
-          {/* Image Preview */}
-          {originalImage && enhancedImage && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-              <div>
-                <Typography variant="small" className="mb-2">Original Image</Typography>
-                <img src={originalImage} alt="Original" className="rounded-lg shadow-md" />
-              </div>
-              <div>
-                <Typography variant="small" className="mb-2">Enhanced Image ({style})</Typography>
-                <img src={enhancedImage} alt="Enhanced" className="rounded-lg shadow-md" />
-              </div>
+        {/* Generate Button - 12 columns */}
+        <div className="col-span-12 text-center">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 px-8 rounded-lg font-medium transition-colors duration-200 shadow-md hover:shadow-lg"
+            onClick={generateImage}
+            disabled={loading}
+          >
+            {loading ? "Generating..." : "Generate Image"}
+          </button>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="col-span-12">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
             </div>
-          )}
-        </CardBody>
-      </Card>
+          </div>
+        )}
+
+        {/* Input Image - 6 columns */}
+        {file && (
+          <div className="col-span-12 md:col-span-6">
+            <h2 className="text-lg font-semibold mb-3 text-gray-800">Input Image</h2>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <img
+                src={URL.createObjectURL(file)}
+                alt="Input Preview"
+                className="w-full h-auto rounded-lg shadow-md object-cover max-h-80"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Output Image - 6 columns */}
+        {outputUrl && (
+          <div className="col-span-12 md:col-span-6">
+            <h2 className="text-lg font-semibold mb-3 text-gray-800">Generated Image</h2>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <img
+                src={outputUrl}
+                alt="Generated Output"
+                className="w-full h-auto rounded-lg shadow-md object-cover max-h-80"
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default ImageToImage;
