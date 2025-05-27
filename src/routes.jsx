@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { Home } from "@/pages/dashboard";
-import EnhanceImage from "@/pages/dashboard/EnhanceImage.jsx";
+import EnhanceImage from "@/pages/dashboard/EnhanceImage";
 import TextToImage from "@/pages/dashboard/TextToImage";
 import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
