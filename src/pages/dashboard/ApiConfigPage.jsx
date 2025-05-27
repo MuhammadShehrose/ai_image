@@ -399,10 +399,10 @@ const ApiConfigPage = () => {
           <div className="p-6 space-y-6">
                <div className="flex items-center justify-between">
                     <Typography variant="h4">
-                         {showReplicateView ? "Replicate API Keys" : "API Configuration"}
+                         {showReplicateView ? "Image to Image API key" : "Text to Image API key"}
                     </Typography>
                     <Switch
-                         label="Replicate View"
+                         label="Switch"
                          checked={showReplicateView}
                          onChange={() => {
                               setShowReplicateView(!showReplicateView);
