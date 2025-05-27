@@ -10,6 +10,8 @@ pnpm-lock.yaml
 package-lock.json
 yarn.lock
 
+public/uploads
+
 node_modules
 dist
 dist-ssr

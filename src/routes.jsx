@@ -61,7 +61,7 @@ export const routes = [
       },
       {
         icon: <PhotoIcon {...icon} />,
-        name: "enhance image",
+        name: "image to image",
         path: "/enhance-image",
         element: (
           <PrivateRoute>
