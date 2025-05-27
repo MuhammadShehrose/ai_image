@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import TextToImageHome from "@/pages/components/TextToImageHome";
+import GeneratePage from "@/pages/components/GeneratePage";
 // Import your AuthContext
 import { AuthContext } from "../../context/AuthContext"; // Adjust path as needed
 
@@ -24,6 +25,8 @@ const LandingPage = () => {
      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
      const [currentImageIndex, setCurrentImageIndex] = useState(0);
      const [animatedStats, setAnimatedStats] = useState([0, 0, 0, 0]);
+     // Add this state at the top inside LandingPage
+     const [showTextToImage, setShowTextToImage] = useState(true);
      const navigate = useNavigate();
 
      // Use AuthContext for login state
@@ -125,7 +128,7 @@ const LandingPage = () => {
      };
 
      return (
-          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+          <div style={{ background: '#a1adca' }} className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
                {/* Background Effects */}
                <div className="fixed inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -313,10 +316,32 @@ const LandingPage = () => {
                     </div>
                )}
 
-               {currentUser &&
-                    <div className='pt-24 pb-16'>
-                         <TextToImageHome />
-                    </div>}
+               {currentUser && (
+                    <div className="pt-24 pb-16">
+                         <div className="flex justify-center mb-8">
+                              <button
+                                   className={`px-6 py-2 rounded-l-lg font-semibold ${showTextToImage ? 'bg-purple-600 text-white' : 'bg-slate-700 text-gray-300'}`}
+                                   onClick={() => setShowTextToImage(true)}
+                              >
+                                   Text to Image
+                              </button>
+                              <button
+                                   className={`px-6 py-2 rounded-r-lg font-semibold ${!showTextToImage ? 'bg-purple-600 text-white' : 'bg-slate-700 text-gray-300'}`}
+                                   onClick={() => setShowTextToImage(false)}
+                              >
+                                   Generate Page
+                              </button>
+                         </div>
+                         {showTextToImage ? (
+                              <TextToImageHome />
+                         ) : (
+                              <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-2xl p-4">
+                                   <GeneratePage />
+                              </div>
+                         )}
+                    </div>
+               )}
+
 
                {/* Features Section */}
                <div className="py-24 relative">
