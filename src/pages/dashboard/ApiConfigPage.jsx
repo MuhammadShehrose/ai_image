@@ -463,7 +463,7 @@ const ApiConfigPage = () => {
                               <tr>
                                    <th className="p-2">Key</th>
                                    {!showReplicateView && <th className="p-2">Host</th>}
-                                   <th className="p-2">Count</th>
+                                   {!showReplicateView && <th className="p-2">Count</th>}
                                    <th className="p-2">Status</th>
                                    <th className="p-2">{showReplicateView ? "Action" : "Toggle"}</th>
                               </tr>
@@ -483,7 +483,7 @@ const ApiConfigPage = () => {
                                              )}
                                         </td>
                                         {!showReplicateView && <td className="p-2">{key.api_host}</td>}
-                                        <td className="p-2">{key.count ?? 0}</td>
+                                        {!showReplicateView && <td className="p-2">{key.count ?? 0}</td>}
                                         <td className="p-2 capitalize">{key.status}</td>
                                         <td className="p-2">
                                              {showReplicateView ? (
