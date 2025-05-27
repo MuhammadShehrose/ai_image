@@ -10,16 +10,31 @@ import routes from "@/routes";
 
 export function Auth() {
   const navbarRoutes = [
+    // {
+    //   name: "dashboard",
+    //   path: "/dashboard/home",
+    //   icon: ChartPieIcon,
+    // },
     {
-      name: "dashboard",
-      path: "/dashboard/home",
+      name: "enhanced image",
+      path: "/dashboard/enhanceimage",
       icon: ChartPieIcon,
     },
     {
-      name: "profile",
-      path: "/dashboard/home",
-      icon: UserIcon,
+      name: "text to image",
+      path: "/dashboard/texttoimage",
+      icon: ChartPieIcon,
     },
+    {
+      name: "gallery",
+      path: "/dashboard/gallery",
+      icon: ChartPieIcon,
+    },
+    // {
+    //   name: "profile",
+    //   path: "/dashboard/home",
+    //   icon: UserIcon,
+    // },
     {
       name: "sign up",
       path: "/auth/sign-up",

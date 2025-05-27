@@ -1,63 +1,145 @@
 import {
   HomeIcon,
-  UserCircleIcon,
-  TableCellsIcon,
-  InformationCircleIcon,
-  ServerStackIcon,
-  RectangleStackIcon,
+  PhotoIcon,
+  DocumentTextIcon,
+  Squares2X2Icon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
+
+import { Home } from "@/pages/dashboard";
+import EnhanceImage from "@/pages/dashboard/EnhanceImage";
+import TextToImage from "@/pages/dashboard/TextToImage";
+import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
+import Users from "@/pages/dashboard/users";
+import ApiConfigPage from "@/pages/dashboard/ApiConfigPage";
+
+import PrivateRoute from "@/components/PrivateRoute";
+import PublicRoute from "@/components/PublicRoute";
+import UsersRoute from "@/components/AdminRoute";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import DeleteAccount from "@/pages/dashboard/DeleteAccount";
+import LandingPage from "@/pages/dashboard/landing";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
 
 export const routes = [
+  // Landing page route
   {
-    layout: "dashboard",
+    layout: "landing",
     pages: [
       {
-        icon: <HomeIcon {...icon} />,
-        name: "dashboard",
-        path: "/home",
-        element: <Home />,
-      },
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "profile",
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        icon: <TableCellsIcon {...icon} />,
-        name: "tables",
-        path: "/tables",
-        element: <Tables />,
-      },
-      {
-        icon: <InformationCircleIcon {...icon} />,
-        name: "notifications",
-        path: "/notifications",
-        element: <Notifications />,
+        path: "/",
+        element: <LandingPage />,
       },
     ],
   },
   {
-    title: "auth pages",
+    layout: "dashboard",
+    pages: [
+      // {
+      //   icon: <HomeIcon {...icon} />,
+      //   name: "dashboard",
+      //   path: "/home",
+      //   element: (
+      //     <PrivateRoute>
+      //       <Home />
+      //     </PrivateRoute>
+      //   ),
+      // },
+      {
+        icon: <Squares2X2Icon {...icon} />,
+        name: "gallery",
+        path: "/gallery",
+        element: (
+          <PrivateRoute>
+            <Gallery />
+          </PrivateRoute>
+        ),
+      },
+      {
+        icon: <PhotoIcon {...icon} />,
+        name: "image to image",
+        path: "/enhance-image",
+        element: (
+          <PrivateRoute>
+            <EnhanceImage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        icon: <DocumentTextIcon {...icon} />,
+        name: "text to image",
+        path: "/text-to-image",
+        element: (
+          <PrivateRoute>
+            <TextToImage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        icon: <TrashIcon {...icon} />,
+        name: "delete account",
+        path: "/delete-account",
+        element: (
+          <PrivateRoute>
+            <DeleteAccount />
+          </PrivateRoute>
+        ),
+      },
+      {
+        icon: <HomeIcon {...icon} />,
+        name: "Website",
+        path: "/landing",
+        element: (
+          <PrivateRoute>
+            <LandingPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        icon: <DocumentTextIcon {...icon} />,
+        name: "Users",
+        path: "/Users",
+        element: (
+          <UsersRoute>
+            <Users />
+          </UsersRoute>
+        ),
+      },
+      {
+        icon: <Cog6ToothIcon {...icon} />,
+        name: "API Config",
+        path: "/api-config",
+        element: (
+          <UsersRoute>
+            <ApiConfigPage />
+          </UsersRoute>
+        ),
+      }
+    ],
+
+  },
+  {
     layout: "auth",
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in",
         path: "/sign-in",
-        element: <SignIn />,
+        element: (
+          <PublicRoute>
+            <SignIn />
+          </PublicRoute>
+        ),
       },
       {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up",
         path: "/sign-up",
-        element: <SignUp />,
+        element: (
+          <PublicRoute>
+            <SignUp />
+          </PublicRoute>
+        ),
       },
     ],
   },
