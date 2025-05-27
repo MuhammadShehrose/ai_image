@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
+  getDocs,
+  query,
+  where,
   collection,
   addDoc,
 } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+
 
 const styles = [
   "Modern",
@@ -26,62 +30,128 @@ const ImageToImage = () => {
   const auth = getAuth();
   const db = getFirestore();
 
+  // const generateImage = async () => {
+  //   if (!file) {
+  //     setError("Please select an image to upload.");
+  //     return;
+  //   }
+
+  //   if (file.size > 1024 * 1024) { // 1MB = 1048576 bytes
+  //     setError("Image size must be less than 1 MB.");
+  //     return;
+  //   }
+
+  //   if (!style) {
+  //     setError("Please select a style.");
+  //     return;
+  //   }
+
+  //   if (!prompt || prompt.trim().length < 5) {
+  //     setError("Please enter a more descriptive prompt.");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   setError(null);
+  //   setOutputUrl(null);
+
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+  //     formData.append("prompt", prompt);
+  //     formData.append("style", style);
+
+  //     const response = await axios.post(
+  //       "http://localhost:5000/api/generate",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+
+  //         },
+  //       }
+  //     );
+
+  //     // Convert to base64
+  //     const imageResponse = await fetch(response.data.output);
+  //     const imageBlob = await imageResponse.blob();
+  //     if (imageBlob.size > 1024 * 1024) {
+  //       setError("Generated image is too large to store in database (over 1MB).");
+  //       return;
+  //     }
+  //     const base64 = await convertBlobToBase64(imageBlob);
+
+  //     // Save to Firestore
+  //     const user = auth.currentUser;
+  //     if (user) {
+  //       await addDoc(collection(db, "images"), {
+  //         user_id: user.uid,
+  //         prompt: prompt,
+  //         image: base64,
+  //         type: style,
+  //         createdAt: new Date(),
+  //       });
+  //     }
+
+  //     setOutputUrl(response.data.output);
+  //   } catch (err) {
+  //     setError("Failed to generate image.");
+  //   }
+
+  //   setLoading(false);
+  // };
   const generateImage = async () => {
-    if (!file) {
-      setError("Please select an image to upload.");
-      return;
-    }
-
-    if (file.size > 1024 * 1024) { // 1MB = 1048576 bytes
-      setError("Image size must be less than 1 MB.");
-      return;
-    }
-
-    if (!style) {
-      setError("Please select a style.");
-      return;
-    }
-
-    if (!prompt || prompt.trim().length < 5) {
-      setError("Please enter a more descriptive prompt.");
-      return;
-    }
+    if (!file) return setError("Please select an image to upload.");
+    if (file.size > 1024 * 1024) return setError("Image size must be less than 1 MB.");
+    if (!style) return setError("Please select a style.");
+    if (!prompt || prompt.trim().length < 5) return setError("Please enter a more descriptive prompt.");
 
     setLoading(true);
     setError(null);
     setOutputUrl(null);
 
     try {
+      // ✅ Step 1: Get active API key from Firestore
+      const keySnapshot = await getDocs(
+        query(collection(db, "replicate_keys"), where("status", "==", "active"))
+      );
+
+      if (keySnapshot.empty) {
+        throw new Error("No active API key found.");
+      }
+
+      const apiKey = keySnapshot.docs[0].data().api_key;
+      console.log("API key being sent:", apiKey);
+
+      // ✅ Step 2: Prepare image and metadata
       const formData = new FormData();
       formData.append("image", file);
       formData.append("prompt", prompt);
       formData.append("style", style);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/generate",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // ✅ Step 3: Send request to Express server
+      const response = await axios.post("http://localhost:5000/api/generate", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-api-key": apiKey, //  Send dynamic API key
+        },
+      });
 
-      // Convert to base64
+      // ✅ Step 4: Convert and save image
       const imageResponse = await fetch(response.data.output);
       const imageBlob = await imageResponse.blob();
+
       if (imageBlob.size > 1024 * 1024) {
         setError("Generated image is too large to store in database (over 1MB).");
         return;
       }
-      const base64 = await convertBlobToBase64(imageBlob);
 
-      // Save to Firestore
+      const base64 = await convertBlobToBase64(imageBlob);
       const user = auth.currentUser;
       if (user) {
         await addDoc(collection(db, "images"), {
           user_id: user.uid,
-          prompt: prompt,
+          prompt,
           image: base64,
           type: style,
           createdAt: new Date(),
@@ -90,6 +160,7 @@ const ImageToImage = () => {
 
       setOutputUrl(response.data.output);
     } catch (err) {
+      console.error(err);
       setError("Failed to generate image.");
     }
 
