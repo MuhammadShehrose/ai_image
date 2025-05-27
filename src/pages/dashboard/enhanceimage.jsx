@@ -32,7 +32,7 @@ const ImageToImage = () => {
       return;
     }
 
-    if (file.size > 1024 * 1024) { // 1MB = 1048576 bytes
+    if (file.size > 3 * 1024 * 1024) { // 3MB = 3 * 1024 * 1024 bytes
       setError("Image size must be less than 1 MB.");
       return;
     }
@@ -69,11 +69,20 @@ const ImageToImage = () => {
 
       // Convert to base64
       const imageResponse = await fetch(response.data.output);
-      const imageBlob = await imageResponse.blob();
+
+      let imageBlob = await imageResponse.blob();
       if (imageBlob.size > 1024 * 1024) {
-        setError("Generated image is too large to store in database (over 1MB).");
-        return;
+        // Try compressing
+        const compressedBlob = await compressImageBlob(imageBlob, 0.7);
+        if (compressedBlob && compressedBlob.size <= 1024 * 1024) {
+          imageBlob = compressedBlob;
+        } else {
+          setOutputUrl(response.data.output);
+          setError("Generated image is too large to store in database (over 1MB) even after compression.");
+          return;
+        }
       }
+
       const base64 = await convertBlobToBase64(imageBlob);
 
       // Save to Firestore
@@ -103,6 +112,23 @@ const ImageToImage = () => {
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
+
+  const compressImageBlob = (blob, quality = 0.7) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((compressedBlob) => {
+          resolve(compressedBlob);
+        }, "image/jpeg", quality); // convert to JPEG
+      };
+      img.src = URL.createObjectURL(blob);
+    });
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
