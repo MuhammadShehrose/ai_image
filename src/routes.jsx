@@ -7,11 +7,8 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { Home } from "@/pages/dashboard";
-// import EnhanceImage from "@/pages/dashboard/EnhanceImage";
 import ImageToImage from "@/pages/dashboard/ImageToImage";
-// import TextToImage from './pages/dashboard/TextToImage.jsx';
-// import TextToImage from "@/pages/dashboard/TextToImage";
-import TextToImage from "./pages/dashboard/TextToImage";
+import TextToImage from "@/pages/dashboard/TextToImage.jsx";
 import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
 import Users from "@/pages/dashboard/users";
