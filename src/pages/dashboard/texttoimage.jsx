@@ -12,6 +12,7 @@ import {
   doc,
 } from "firebase/firestore";
 
+
 export default function TextToImage() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
