@@ -8,7 +8,7 @@ import {
 
 import { Home } from "@/pages/dashboard";
 import ImageToImage from "@/pages/dashboard/ImageToImage";
-import TextToImage from "@/pages/dashboard/TextToImage.jsx";
+import TextToImage from "./pages/Dashboard/TextToImage";
 import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
 import Users from "@/pages/dashboard/users";
