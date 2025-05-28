@@ -8,7 +8,7 @@ import {
 
 import { Home } from "@/pages/dashboard";
 // import EnhanceImage from "@/pages/dashboard/EnhanceImage";
-import ImageToImage from "@/pages/dashboard/enhanceimage";
+import ImageToImage from "@/pages/dashboard/ImageToImage";
 import TextToImage from "@/pages/dashboard/TextToImage";
 import Gallery from "@/pages/dashboard/Gallery";
 import { SignIn, SignUp } from "@/pages/auth";
@@ -63,10 +63,10 @@ export const routes = [
       {
         icon: <PhotoIcon {...icon} />,
         name: "image to image",
-        path: "/enhance-image",
+        path: "/image-to-image",
         element: (
           <PrivateRoute>
-            <EnhanceImage />
+            <ImageToImage />
           </PrivateRoute>
         ),
       },
