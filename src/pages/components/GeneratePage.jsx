@@ -56,7 +56,7 @@ const GeneratePage = () => {
                formData.append("style", style);
 
                // const response = await axios.post("http://localhost:5000/api/generate", formData, {
-               const response = await axios.post("https://ai-image-1s0v.onrender.com:5000/api/generate", formData, {
+               const response = await axios.post("https://ai-image-1s0v.onrender.com/api/generate", formData, {
                     headers: {
                          "Content-Type": "multipart/form-data",
                          "x-api-key": apiKey,
