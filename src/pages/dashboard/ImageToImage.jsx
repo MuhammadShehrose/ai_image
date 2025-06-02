@@ -60,7 +60,7 @@ const ImageToImage = () => {
 
       // ✅ Step 3: Send request to Express server
       // const response = await axios.post("http://localhost:5000/api/generate", formData, {
-      const response = await axios.post("https://ai-image-1-3whn.onrender.com/api/generate", formData, {
+      const response = await axios.post("https://ai-image-1s0v.onrender.com/api/generate", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "x-api-key": apiKey, //  Send dynamic API key
