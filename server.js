@@ -131,7 +131,8 @@ app.post("/api/generate", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "Prompt is required" });
     }
 
-    const imageUrl = `https://3d62-103-59-216-42.ngrok-free.app/uploads/${req.file.filename}`;
+    // const imageUrl = `https://3d62-103-59-216-42.ngrok-free.app/uploads/${req.file.filename}`;
+      const imageUrl = `https://ai-image-1s0v.onrender.com/uploads/${req.file.filename}`;
 
     const fullPrompt = `${prompt}, style: ${style}`;
 
