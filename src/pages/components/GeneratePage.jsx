@@ -126,15 +126,111 @@ const GeneratePage = () => {
      };
 
      return (
-          <div className="min-h-screen  to-black py-12 px-4 sm:px-6 lg:px-8">
-               <div className="max-w-7xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 p-10">
-                    <h1 className="text-4xl font-extrabold text-white mb-12 text-center tracking-wide">
+          // <div className="min-h-screen  to-black py-12 px-4 sm:px-6 lg:px-8">
+          //      <div className="max-w-7xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 p-10">
+          //           <h1 className="text-4xl font-extrabold text-white mb-12 text-center tracking-wide">
+          //                Image to Image Generator
+          //           </h1>
+
+          //           <div className="grid grid-cols-12 gap-8">
+          //                {/* Upload */}
+          //                <div className="col-span-12 md:col-span-6 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
+          //                     <label className="text-white font-semibold mb-2">Upload Image</label>
+          //                     <input
+          //                          type="file"
+          //                          accept="image/*"
+          //                          onChange={(e) => setFile(e.target.files[0])}
+          //                          className="block w-full rounded-lg border border-white/40 bg-white/10 px-4 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
+          //                     />
+          //                </div>
+
+          //                {/* Style Select */}
+          //                <div className="col-span-12 md:col-span-6 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
+          //                     <label className="text-white font-semibold mb-2">Select Style</label>
+          //                     <select
+          //                          value={style}
+          //                          onChange={(e) => setStyle(e.target.value)}
+          //                          className="w-full rounded-lg border border-white/40 bg-white/10 px-4 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
+          //                     >
+          //                          {styles.map((styleOption) => (
+          //                               <option key={styleOption} value={styleOption} className="text-black">
+          //                                    {styleOption}
+          //                               </option>
+          //                          ))}
+          //                     </select>
+          //                </div>
+
+          //                {/* Prompt */}
+          //                <div className="col-span-12 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
+          //                     <label className="text-white font-semibold mb-2">Prompt Description</label>
+          //                     <textarea
+          //                          rows={4}
+          //                          value={prompt}
+          //                          onChange={(e) => setPrompt(e.target.value)}
+          //                          placeholder="Enter your detailed prompt description..."
+          //                          className="resize-none w-full rounded-lg border border-white/40 bg-white/10 px-4 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
+          //                     />
+          //                </div>
+
+          //                {/* Generate Button */}
+          //                <div className="col-span-12 text-center">
+          //                     <button
+          //                          onClick={generateImage}
+          //                          disabled={loading}
+          //                          className="inline-block rounded-lg bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-12 py-4 font-semibold text-white shadow-lg hover:shadow-xl transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+          //                     >
+          //                          {loading ? "Generating..." : "Generate Image"}
+          //                     </button>
+          //                </div>
+
+          //                {/* Error Message */}
+          //                {error && (
+          //                     <div className="col-span-12">
+          //                          <div className="rounded-lg bg-red-700/80 text-red-100 px-5 py-3 border border-red-300/50 shadow-sm">
+          //                               {error}
+          //                          </div>
+          //                     </div>
+          //                )}
+
+          //                {/* Input Image */}
+          //                {file && (
+          //                     <div className="col-span-12 md:col-span-6">
+          //                          <h2 className="text-white font-semibold mb-4 text-lg">Input Image</h2>
+          //                          <div className="rounded-xl overflow-hidden border border-white/30 shadow-lg">
+          //                               <img
+          //                                    src={URL.createObjectURL(file)}
+          //                                    alt="Input Preview"
+          //                                    className="w-full object-cover max-h-80"
+          //                               />
+          //                          </div>
+          //                     </div>
+          //                )}
+
+          //                {/* Output Image */}
+          //                {outputUrl && (
+          //                     <div className="col-span-12 md:col-span-6">
+          //                          <h2 className="text-white font-semibold mb-4 text-lg">Generated Image</h2>
+          //                          <div className="rounded-xl overflow-hidden border border-white/30 shadow-lg">
+          //                               <img
+          //                                    src={outputUrl}
+          //                                    alt="Generated Output"
+          //                                    className="w-full object-cover max-h-80"
+          //                               />
+          //                          </div>
+          //                     </div>
+          //                )}
+          //           </div>
+          //      </div>
+          // </div>
+          <div className="min-h-screen overflow-x-hidden bg-gradient-to-b  py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
+               <div className="max-w-7xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 p-6 sm:p-8 md:p-10">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-8 sm:mb-12 text-center tracking-wide">
                          Image to Image Generator
                     </h1>
 
-                    <div className="grid grid-cols-12 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
                          {/* Upload */}
-                         <div className="col-span-12 md:col-span-6 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
+                         <div className="col-span-12 lg:col-span-6 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
                               <label className="text-white font-semibold mb-2">Upload Image</label>
                               <input
                                    type="file"
@@ -145,7 +241,7 @@ const GeneratePage = () => {
                          </div>
 
                          {/* Style Select */}
-                         <div className="col-span-12 md:col-span-6 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
+                         <div className="col-span-12 lg:col-span-6 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 p-6 flex flex-col">
                               <label className="text-white font-semibold mb-2">Select Style</label>
                               <select
                                    value={style}
@@ -177,7 +273,7 @@ const GeneratePage = () => {
                               <button
                                    onClick={generateImage}
                                    disabled={loading}
-                                   className="inline-block rounded-lg bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-12 py-4 font-semibold text-white shadow-lg hover:shadow-xl transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                                   className="inline-block rounded-lg bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 px-8 sm:px-12 py-3 sm:py-4 font-semibold text-white shadow-lg hover:shadow-xl transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                               >
                                    {loading ? "Generating..." : "Generate Image"}
                               </button>
@@ -194,13 +290,13 @@ const GeneratePage = () => {
 
                          {/* Input Image */}
                          {file && (
-                              <div className="col-span-12 md:col-span-6">
+                              <div className="col-span-12 lg:col-span-6">
                                    <h2 className="text-white font-semibold mb-4 text-lg">Input Image</h2>
                                    <div className="rounded-xl overflow-hidden border border-white/30 shadow-lg">
                                         <img
                                              src={URL.createObjectURL(file)}
                                              alt="Input Preview"
-                                             className="w-full object-cover max-h-80"
+                                             className="w-full max-w-full object-cover max-h-80"
                                         />
                                    </div>
                               </div>
@@ -208,13 +304,13 @@ const GeneratePage = () => {
 
                          {/* Output Image */}
                          {outputUrl && (
-                              <div className="col-span-12 md:col-span-6">
+                              <div className="col-span-12 lg:col-span-6">
                                    <h2 className="text-white font-semibold mb-4 text-lg">Generated Image</h2>
                                    <div className="rounded-xl overflow-hidden border border-white/30 shadow-lg">
                                         <img
                                              src={outputUrl}
                                              alt="Generated Output"
-                                             className="w-full object-cover max-h-80"
+                                             className="w-full max-w-full object-cover max-h-80"
                                         />
                                    </div>
                               </div>
