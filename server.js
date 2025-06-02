@@ -161,5 +161,5 @@ app.post("/api/generate", upload.single("image"), async (req, res) => {
 
 app.listen(port, () => {
   // console.log(`✅ Backend listening on https://ai-image-1s0v.onrender.com:${port}`);
-    console.log(`✅ Backend listening on https://ai-image-1s0v.onrender.com:${port}`);
+    console.log(`🌐 Live URL: https://ai-image-1s0v.onrender.com`);
 });
