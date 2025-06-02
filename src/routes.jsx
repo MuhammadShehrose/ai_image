@@ -11,7 +11,7 @@ import ImageToImage from "@/pages/dashboard/ImageToImage";
 // import TextToImage from "./pages/Dashboard/TextToImage";
 import TextToImage from "./pages/dashboard/TextToImage";
 // import TextToImage from "@/pages/Dashboard/TextToImage";
-import Gallery from "@/pages/dashboard/Gallery";
+import Gallery from "@/pages/dashboard/gallery";
 import { SignIn, SignUp } from "@/pages/auth";
 import Users from "@/pages/dashboard/users";
 import ApiConfigPage from "@/pages/dashboard/ApiConfigPage";
